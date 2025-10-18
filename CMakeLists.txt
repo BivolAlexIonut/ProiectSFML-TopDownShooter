@@ -15,6 +15,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# <<< PASUL 1: Activează FetchContent >>>
+include(FetchContent)
+
 include(cmake/Options.cmake)
 include(cmake/CompilerFlags.cmake)
 include(cmake/CopyHelper.cmake)
@@ -45,6 +48,14 @@ include(cmake/CopyHelper.cmake)
 
 # find_package(Threads REQUIRED)
 
+# <<< PASUL 2: Descarcă și configurează SFML 3.x >>>
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG        3.0.x  # Folosește cel mai nou branch 3.0.x
+)
+FetchContent_MakeAvailable(SFML)
+
 ###############################################################################
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
@@ -52,7 +63,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
 )
 
-# NOTE: Add all defined targets (e.g. executables, libraries, etc. )
+# NOTE: Add all defined targets (e.g., executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
 set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 # set_compiler_flags(TARGET_NAMES ${MAIN_EXECUTABLE_NAME} ${FOO} ${BAR})
@@ -63,9 +74,12 @@ set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
-# target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
-# target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)
+# target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${\<SomeLib\>_SOURCE_DIR}/include)
+# target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${\<SomeLib\>_BINARY_DIR}/lib)
 # target_link_libraries(${MAIN_EXECUTABLE_NAME} <SomeLib>)
+
+# <<< PASUL 3: Leagă executabilul "oop" de biblioteca SFML >>>
+target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE SFML::Graphics)
 
 ###############################################################################
 
