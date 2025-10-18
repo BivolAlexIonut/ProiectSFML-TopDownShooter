@@ -1,38 +1,33 @@
 #include <SFML/Graphics.hpp>
+#include "Player.h"
 
 int main()
 {
     // Crearea ferestrei (folosind sf::Vector2u pentru VideoMode)
-    sf::RenderWindow window(sf::VideoMode({800, 600}), "Felicitări! Merge!");
+    sf::RenderWindow window(sf::VideoMode({800, 600}), "TopDownShooter");
+    window.setFramerateLimit(60);
 
-    // Crearea unui cerc
-    sf::CircleShape shape(100.f); // Rază de 100
-    shape.setFillColor(sf::Color::Green);
-
-    // Setarea poziției (folosind sf::Vector2f)
-    shape.setPosition({300.f, 200.f});
+    //Creare obiect de tip player
+    Player player(400.f,300.f);
+    sf::Clock clock;
 
     // Bucla principală
     while (window.isOpen())
     {
-        // ----- NOUA BUCLĂ DE EVENIMENTE (SFML 3) -----
-        // 1. pollEvent() nu mai ia un parametru
-        // 2. Returnează un std::optional, pe care îl verificăm
+        sf::Time dt = clock.restart();
         while (const auto event = window.pollEvent())
         {
-            // 3. Verificăm tipul evenimentului cu .is<T>()
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
             }
         }
         // ---------------------------------------------
-
+        player.update(dt.asSeconds());
         // Curăță ecranul
-        window.clear();
-
-        // Desenează cercul
-        window.draw(shape);
+        window.clear(sf::Color::Black);
+        //Deseneaza
+        player.draw(window);
 
         // Afișează
         window.display();

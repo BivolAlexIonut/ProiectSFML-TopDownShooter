@@ -61,6 +61,8 @@ FetchContent_MakeAvailable(SFML)
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
+        Player.h
+        Player.cpp
 )
 
 # NOTE: Add all defined targets (e.g., executables, libraries, etc. )
@@ -79,7 +81,7 @@ set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 # target_link_libraries(${MAIN_EXECUTABLE_NAME} <SomeLib>)
 
 # <<< PASUL 3: Leagă executabilul "oop" de biblioteca SFML >>>
-target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE SFML::Graphics)
+target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE SFML::Graphics SFML::Window SFML::System)
 
 ###############################################################################
 
