@@ -1,35 +1,33 @@
+// main.cpp
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include <iostream>
 
-int main()
-{
-    // Crearea ferestrei (folosind sf::Vector2u pentru VideoMode)
-    sf::RenderWindow window(sf::VideoMode({800, 600}), "TopDownShooter");
+int main() {
+    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Top-Down Shooter");
     window.setFramerateLimit(60);
 
-    //Creare obiect de tip player
-    Player player(400.f,300.f);
+    Player player(window.getSize().x / 2.f, window.getSize().y / 2.f);
+
     sf::Clock clock;
 
-    // Bucla principală
-    while (window.isOpen())
-    {
+    while (window.isOpen()) {
         sf::Time dt = clock.restart();
-        while (const auto event = window.pollEvent())
+
+        while (auto event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
             }
         }
-        // ---------------------------------------------
-        player.update(dt.asSeconds());
-        // Curăță ecranul
-        window.clear(sf::Color::Black);
-        //Deseneaza
-        player.draw(window);
+        sf::Vector2i mousePositionWindow = sf::Mouse::getPosition(window);
+        sf::Vector2f mousePositionWorld = window.mapPixelToCoords(mousePositionWindow);
 
-        // Afișează
+        player.update(dt.asSeconds(), mousePositionWorld);
+
+        window.clear(sf::Color(30, 30, 30));
+        player.draw(window);
         window.display();
     }
 

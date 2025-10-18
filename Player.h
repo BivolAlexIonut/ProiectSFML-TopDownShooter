@@ -1,20 +1,18 @@
+// Player.h
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "SFML/Graphics/CircleShape.hpp"
-#include "SFML/Graphics/RenderWindow.hpp"
-#include <cmath>
-
 class Player {
 public:
-    Player(float stratX,float startY);
+    Player(float startX, float startY);
     ~Player();
-    void update(float dt);
-    //Desenez jucatorul prin fereastra
+
+    void update(float dt, sf::Vector2f mousePosition);
+
     void draw(sf::RenderWindow& window);
 
 private:
-    //Datele specifice jucatorului
-    sf::CircleShape shape;
+    sf::Texture playerTexture;
+    sf::Sprite playerSprite;
     float movementSpeed;
 };
