@@ -9,7 +9,6 @@ public:
     ~GameMap();
 
     bool load(const std::string& jsonPath, const std::string& tilesetPath);
-
     void draw(sf::RenderWindow& window);
 
 private:

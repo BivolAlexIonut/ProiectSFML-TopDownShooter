@@ -1,7 +1,6 @@
-// main.cpp
 #include <SFML/Graphics.hpp>
 #include "Player.h"
-#include "GameMap.h"  // <-- 1. Include noua clasă
+#include "GameMap.h"
 #include <iostream>
 
 int main() {
@@ -10,7 +9,7 @@ int main() {
 
     GameMap gameMap;
     if (!gameMap.load("/home/alex/proiect-fac-sfml/assets/Levels/level1.json",
-                      "/home/alex/proiect-fac-sfml/assets/Premium Content/Tileset with cell size 256x256.png")) { // Atenție la calea tileset-ului!
+                      "/home/alex/proiect-fac-sfml/assets/Premium Content/Tileset with cell size 256x256.png")) {
         std::cerr << "EROARE FATALA: Harta nu a putut fi incarcata." << std::endl;
         return -1;
                       }
@@ -18,6 +17,10 @@ int main() {
     Player player(1000.f * mapScale, 1000.f * mapScale);
 
     sf::Clock clock;
+    //Camera
+    sf::View camera;
+    camera.setSize({1280,720});//creez caemra si setez marimea camerei(ca marimea ferestrei de lucru)
+    camera.setCenter(player.getPosition());
 
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
@@ -29,11 +32,13 @@ int main() {
         }
 
         sf::Vector2i mousePositionWindow = sf::Mouse::getPosition(window);
-        sf::Vector2f mousePositionWorld = window.mapPixelToCoords(mousePositionWindow);
+        sf::Vector2f mousePositionWorld = window.mapPixelToCoords(mousePositionWindow,camera);
         player.update(dt.asSeconds(), mousePositionWorld);
+        camera.setCenter(player.getPosition());
 
         window.clear(sf::Color(30, 30, 30));
 
+        window.setView(camera);
         gameMap.draw(window);
 
         player.draw(window);

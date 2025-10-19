@@ -5,13 +5,9 @@
 
 using json = nlohmann::json;
 
-GameMap::GameMap() : m_tileSize(0, 0), m_mapSize(0, 0) {
+GameMap::GameMap() : m_tileSize(0, 0), m_mapSize(0, 0) {}
 
-}
-
-GameMap::~GameMap() {
-
-}
+GameMap::~GameMap() {}
 
 bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) {
 
@@ -62,23 +58,11 @@ bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) 
             int texX = (id % tilesetColumns) * m_tileSize.x;
             int texY = (id / tilesetColumns) * m_tileSize.y;
 
-            // ... (calculul texX și texY)
-
             sf::Sprite tileSprite(m_tilesetTexture);
             tileSprite.setTextureRect(sf::IntRect({(int)texX, (int)texY}, {(int)m_tileSize.x, (int)m_tileSize.y}));
-
-            // --- AICI SUNT MODIFICĂRILE LIPSĂ ---
-
-            // 1. Scalăm sprite-ul la mărimea dorită
             tileSprite.setScale({mapScale, mapScale});
-
-            // 2. Scalăm și POZIȚIA, altfel vor fi spații goale între piese
             tileSprite.setPosition({ (float)(x * m_tileSize.x * mapScale),
                                      (float)(y * m_tileSize.y * mapScale) });
-
-            // --- SFÂRȘIT MODIFICĂRI ---
-
-            // Îl adăugăm la lista noastră de desenare
             m_tiles.push_back(tileSprite);
         }
     }
@@ -90,7 +74,6 @@ bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) 
 }
 
 void GameMap::draw(sf::RenderWindow& window) {
-    // Desenăm fiecare piesă din lista noastră
     for (const auto& tile : m_tiles) {
         window.draw(tile);
     }
