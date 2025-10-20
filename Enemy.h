@@ -11,7 +11,6 @@ public:
     void takeDamage(float damage);
     sf::Vector2f getPosition() const;
     friend std::ostream& operator<<(std::ostream& os, const Enemy& enemy);
-
 private:
     float health;
     sf::Vector2f m_position;

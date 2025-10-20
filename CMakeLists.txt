@@ -71,6 +71,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         GameMap.cpp
         Health.cpp
         Enemy.cpp
+
 )
 
 # NOTE: Add all defined targets (e.g., executables, libraries, etc. )
