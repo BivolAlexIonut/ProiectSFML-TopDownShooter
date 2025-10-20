@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Health.h"
 
 class Player {
 public:
@@ -14,6 +15,7 @@ public:
     void draw(sf::RenderTarget& target,sf::RenderStates states) const;
 
     sf::Vector2f getPosition() const;
+    friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
 private:
     sf::RectangleShape HealthBarBackground;
@@ -21,6 +23,5 @@ private:
     sf::Texture playerTexture;
     sf::Sprite playerSprite;
     float movementSpeed;
-    float maxHealth;
-    float currentHealth;
+    Health m_health;
 };

@@ -1,4 +1,3 @@
-// Player.cpp
 #include "Player.h"
 #include <cmath>
 #include <iostream>
@@ -15,9 +14,7 @@ Player::Player(float startX, float startY) :
     if (!this->playerTexture.loadFromFile("../assets/Premium Content/Examples/Assembled skins.png")) {
         std::cerr << "EROARE: Nu am putut incarca ../assets/Premium Content/Examples/Assembled skins.png" << std::endl;
     }
-    //Initializare viata jucator
-    maxHealth = 100.f;
-    currentHealth = maxHealth;
+    m_health = 100.f;
 
     sf::IntRect skinRect({995, 1637}, {265, 461});
     this->playerSprite.setTextureRect(skinRect);
@@ -45,7 +42,7 @@ void Player::draw(sf::RenderWindow& window) {
 }
 
 void Player::updateHealthBar() {
-    float healthpercent = currentHealth / maxHealth;
+    float healthpercent = m_health.getPercentage();
     float netWidth = HEALTHBAR_WIDTH* healthpercent;
     this->HealthBarForeground.setSize(sf::Vector2f(netWidth,HEALTHBAR_HEIGHT));
     updateHealthBarPosition();
@@ -57,6 +54,11 @@ void Player::updateHealthBarPosition() {
     float y = playerPos.y + HEALTHBAR_OFFSET_Y;
     this->HealthBarBackground.setPosition({x,y});
     this->HealthBarForeground.setPosition({x,y});
+}
+
+void Player::takeDamage(float damage) {
+    this->m_health.takeDamage(damage);
+    updateHealthBar();
 }
 
 void Player::update(float dt, sf::Vector2f mousePosition) {
@@ -88,4 +90,10 @@ void Player::update(float dt, sf::Vector2f mousePosition) {
 
 sf::Vector2f Player::getPosition() const {
     return this->playerSprite.getPosition();
+}
+
+std::ostream& operator<<(std::ostream& os, const Player& player) {
+    sf::Vector2f pos = player.getPosition();
+    os << "Player( Pozitie: " << pos.x << ", " << pos.y << " | " << player.m_health << ")";
+    return os;
 }
