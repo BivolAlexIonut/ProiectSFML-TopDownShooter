@@ -12,6 +12,7 @@ public:
     sf::Vector2f getPosition() const;
     friend std::ostream& operator<<(std::ostream& os, const Enemy& enemy);
 private:
+    //Informatii inamic
     float health;
     sf::Vector2f m_position;
     sf::Texture enemyTexture;
