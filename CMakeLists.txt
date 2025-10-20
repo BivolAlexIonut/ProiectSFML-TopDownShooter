@@ -66,11 +66,10 @@ FetchContent_MakeAvailable(nlohmann_json)
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
-    main.cpp
-        Player.h
+        main.cpp
         Player.cpp
-        GameMap.h
         GameMap.cpp
+        Enemy.h
 )
 
 # NOTE: Add all defined targets (e.g., executables, libraries, etc. )

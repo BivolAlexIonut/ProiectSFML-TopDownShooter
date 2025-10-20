@@ -8,8 +8,8 @@ int main() {
     window.setFramerateLimit(60);
 
     GameMap gameMap;
-    if (!gameMap.load("/home/alex/proiect-fac-sfml/assets/Levels/level1.json",
-                      "/home/alex/proiect-fac-sfml/assets/Premium Content/Tileset with cell size 256x256.png")) {
+    if (!gameMap.load("/home/alex/proiect-fac-sfml/ProiectSFML-TopDownShooter/assets/Levels/level1.json",
+                      "/home/alex/proiect-fac-sfml/ProiectSFML-TopDownShooter/assets/Premium Content/Tileset with cell size 256x256.png")) {
         std::cerr << "EROARE FATALA: Harta nu a putut fi incarcata." << std::endl;
         return -1;
                       }
