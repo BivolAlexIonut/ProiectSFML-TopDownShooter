@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include <ostream>
 
 class GameMap {
 public:
@@ -10,6 +11,8 @@ public:
 
     bool load(const std::string& jsonPath, const std::string& tilesetPath);
     void draw(sf::RenderWindow& window);
+
+    friend std::ostream& operator<<(std::ostream& os, const GameMap& map);
 
 private:
     sf::Texture m_tilesetTexture;

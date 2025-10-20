@@ -1,7 +1,8 @@
 #include "GameMap.h"
-#include <nlohmann/json.hpp> // Biblioteca JSON pe care am adăugat-o
-#include <fstream>           // Pentru a citi fișierul
+#include <nlohmann/json.hpp>
+#include <fstream>
 #include <iostream>
+#include <ostream> // <-- ADAUGĂ ASTA
 
 using json = nlohmann::json;
 
@@ -10,7 +11,6 @@ GameMap::GameMap() : m_tileSize(0, 0), m_mapSize(0, 0) {}
 GameMap::~GameMap() {}
 
 bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) {
-
     if (!m_tilesetTexture.loadFromFile(tilesetPath)) {
         std::cerr << "EROARE: Nu am putut incarca tileset-ul: " << tilesetPath << std::endl;
         return false;
@@ -40,8 +40,8 @@ bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) 
 
     unsigned int tilesetColumns = m_tilesetTexture.getSize().x / m_tileSize.x;
 
-    m_tiles.clear(); // Golește harta veche, dacă există
-    m_tiles.reserve(m_mapSize.x * m_mapSize.y); // Optimizare
+    m_tiles.clear();
+    m_tiles.reserve(m_mapSize.x * m_mapSize.y);
 
     for (unsigned int y = 0; y < m_mapSize.y; ++y) {
         for (unsigned int x = 0; x < m_mapSize.x; ++x) {
@@ -50,7 +50,7 @@ bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) 
             int tileID = tileIDs[tileIndex];
 
             if (tileID == 0) {
-                continue; // Nu desenăm nimic, sărim peste
+                continue;
             }
 
             int id = tileID - 1;
@@ -77,4 +77,10 @@ void GameMap::draw(sf::RenderWindow& window) {
     for (const auto& tile : m_tiles) {
         window.draw(tile);
     }
+}
+
+std::ostream& operator<<(std::ostream& os, const GameMap& map) {
+    os << "GameMap( Size: " << map.m_mapSize.x << "x" << map.m_mapSize.y
+       << " | Tiles: " << map.m_tiles.size() << " )";
+    return os;
 }

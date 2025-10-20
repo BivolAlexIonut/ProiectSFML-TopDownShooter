@@ -71,6 +71,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         GameMap.cpp
         Health.cpp
         Enemy.cpp
+        GunSwitch.h
+        GunSwitch.cpp
 
 )
 
