@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Health.h"
 #include "GunSwitch.h"
+#include "Bullet.h"
 #include <ostream>
 
 class Player {
@@ -17,6 +18,8 @@ public:
     void switchWeaponNext();
     void switchWeaponPrev();
 
+    Bullet shoot(sf::Vector2f mousePosition);
+
     friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
 private:
@@ -30,4 +33,5 @@ private:
     float movementSpeed;
     Health m_health;
     GunSwitch m_gunSwitch;
+    sf::Texture bulletTexture;
 };

@@ -73,6 +73,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Enemy.cpp
         GunSwitch.h
         GunSwitch.cpp
+        Bullet.h
+        Bullet.cpp
 
 )
 

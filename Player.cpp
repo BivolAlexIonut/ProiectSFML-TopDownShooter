@@ -18,6 +18,9 @@ Player::Player(float startX, float startY) :
     if (!this->playerTexture.loadFromFile("../assets/Premium Content/Examples/Basic Usage.png")) {
         std::cerr << "EROARE: Nu am putut incarca ../assets/Premium Content/Examples/Basic Usage.png" << std::endl;
     }
+    if (!this->bulletTexture.loadFromFile("/home/alex/proiect-fac-sfml/assets/Bullets.png")) {
+        std::cerr <<"EROARE: Nu am putut incarca ../assets/Bullets.png" << std::endl;
+    }
 
     sf::IntRect skinRect = m_gunSwitch.getCurrentWeaponRect();
     this->playerSprite.setTextureRect(skinRect);
@@ -106,4 +109,21 @@ void Player::switchWeaponPrev() {
     sf::IntRect newRect = m_gunSwitch.getCurrentWeaponRect();
     this->playerSprite.setTextureRect(newRect);
     this->playerSprite.setOrigin({newRect.size.x / 2.f, newRect.size.y / 2.f});
+}
+
+
+Bullet Player::shoot(sf::Vector2f mousePosition) {
+    sf::IntRect pistolBulletRect({4, 213}, {8, 8});
+    const float localBarrelOffsetX = 92.f;
+
+    const float localBarrelOffsetY = 400.f;
+
+    sf::Vector2f localBarrelPos(localBarrelOffsetX, localBarrelOffsetY);
+    sf::Transform playerTransform = playerSprite.getTransform();
+
+    sf::Vector2f barrelPosition = playerTransform.transformPoint(localBarrelPos);
+
+    sf::Vector2f direction = mousePosition - barrelPosition;
+
+    return Bullet(bulletTexture, pistolBulletRect, barrelPosition, direction);
 }

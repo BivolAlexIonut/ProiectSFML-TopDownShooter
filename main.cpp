@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "GameMap.h"
+#include "Bullet.h"
 #include <iostream>
 #include <vector>
 #include "Enemy.h"
@@ -51,6 +52,11 @@ int main() {
     camera.setSize({1280,720});
     camera.setCenter(player.getPosition());
 
+    //Bullets
+    std::vector<Bullet> bullets;
+    sf::Clock shootTimer;
+    const float shootCooldown = 0.2f;
+
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
 
@@ -71,6 +77,12 @@ int main() {
 
         sf::Vector2i mousePositionWindow = sf::Mouse::getPosition(window);
         sf::Vector2f mousePositionWorld = window.mapPixelToCoords(mousePositionWindow,camera);
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && shootTimer.getElapsedTime().asSeconds()> shootCooldown) {
+            //Creez glnt si trag
+            bullets.push_back((player.shoot(mousePositionWorld)));
+            shootTimer.restart();
+        }
+
 
         player.update(dt.asSeconds(), mousePositionWorld);
         camera.setCenter(player.getPosition());
@@ -80,6 +92,10 @@ int main() {
             enemy.update(dt.asSeconds(), playerPos);
         }
 
+        for (auto& bullet : bullets) {
+            bullet.update(dt.asSeconds());
+        }
+
         window.clear(sf::Color(30, 30, 30));
         window.setView(camera);
         gameMap.draw(window);
@@ -87,6 +103,9 @@ int main() {
 
         for (auto& enemy : enemies) {
             enemy.draw(window);
+        }
+        for (auto& bullet : bullets) {
+            bullet.draw(window);
         }
 
         window.display();
