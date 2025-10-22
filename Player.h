@@ -19,6 +19,7 @@ public:
     void switchWeaponPrev();
 
     Bullet shoot(sf::Vector2f mousePosition);
+    float getCurrentWeaponCooldown() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
@@ -34,4 +35,10 @@ private:
     Health m_health;
     GunSwitch m_gunSwitch;
     sf::Texture bulletTexture;
+    std::vector<sf::Vector2f> m_weaponBarrelOffsets;
+    std::vector<sf::IntRect> m_weaponBulletRects;
+
+    std::vector<float> m_weaponBulletAnimSpeeds;
+    std::vector<int> m_weaponBulletAnimFrames;
+    std::vector<float> m_weaponShootCooldowns;
 };

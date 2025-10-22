@@ -22,6 +22,49 @@ Player::Player(float startX, float startY) :
         std::cerr <<"EROARE: Nu am putut incarca ../assets/Bullets.png" << std::endl;
     }
 
+    // (Pistolul)
+    m_weaponBarrelOffsets.push_back(sf::Vector2f(131.f, 356.f));
+    m_weaponBulletRects.push_back(sf::IntRect({4, 213}, {8, 8}));
+    m_weaponBulletAnimSpeeds.push_back(0.1f); // viteza animatie (0.1 secunde pe frame)
+    m_weaponBulletAnimFrames.push_back(4);    // nr. frame-uri (are 4 frame-uri)
+    m_weaponShootCooldowns.push_back(1.f);
+
+    // PISTOLERO
+    m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 468.f)); // De ajustat
+    m_weaponBulletRects.push_back(sf::IntRect({340, 102}, {9, 5})); // Alt glont
+    m_weaponBulletAnimSpeeds.push_back(0.1f); // Animatie mai rapida
+    m_weaponBulletAnimFrames.push_back(4);     // Poate are doar 3 frame-uri (0, 1, 2)
+    m_weaponShootCooldowns.push_back(0.3f);
+
+    // AGHEU
+    m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 548.f)); // De ajustat
+    m_weaponBulletRects.push_back(sf::IntRect({256, 96}, {15, 16})); // Alt glont
+    m_weaponBulletAnimSpeeds.push_back(0.1f); // Animatie mai lenta
+    m_weaponBulletAnimFrames.push_back(4);    // Are 4 frame-uri
+    m_weaponShootCooldowns.push_back(1.f);
+
+
+    // SMG
+    m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 398.f));
+    m_weaponBulletRects.push_back(sf::IntRect({256, 134}, {16, 5}));
+    m_weaponBulletAnimSpeeds.push_back(0.1f);
+    m_weaponBulletAnimFrames.push_back(4);
+    m_weaponShootCooldowns.push_back(0.2f);
+
+    // ShotGUN
+    m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 491.f));
+    m_weaponBulletRects.push_back(sf::IntRect({254, 274}, {56, 12}));
+    m_weaponBulletAnimSpeeds.push_back(0.35f);
+    m_weaponBulletAnimFrames.push_back(3);
+    m_weaponShootCooldowns.push_back(1.2f);
+
+    // SNIPER
+    m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 558.f));
+    m_weaponBulletRects.push_back(sf::IntRect({99, 199}, {10, 5}));
+    m_weaponBulletAnimSpeeds.push_back(0.2f);
+    m_weaponBulletAnimFrames.push_back(4);
+    m_weaponShootCooldowns.push_back(2.f);
+
     sf::IntRect skinRect = m_gunSwitch.getCurrentWeaponRect();
     this->playerSprite.setTextureRect(skinRect);
 
@@ -57,6 +100,14 @@ void Player::updateHealthBar() {
     float netWidth = HEALTHBAR_WIDTH * healthpercent;
     this->HealthBarForeground.setSize(sf::Vector2f(netWidth,HEALTHBAR_HEIGHT));
     updateHealthBarPosition();
+}
+
+float Player::getCurrentWeaponCooldown() const {
+    int index = m_gunSwitch.getCurrentWeaponIndex();
+    if (index < 0 || index >= m_weaponShootCooldowns.size()) {
+        return 0.3f;
+    }
+    return m_weaponShootCooldowns[index];
 }
 
 void Player::updateHealthBarPosition() {
@@ -113,10 +164,19 @@ void Player::switchWeaponPrev() {
 
 
 Bullet Player::shoot(sf::Vector2f mousePosition) {
-    sf::IntRect pistolBulletRect({4, 213}, {8, 8});
-    const float localBarrelOffsetX = 92.f;
+    int currentIndex = m_gunSwitch.getCurrentWeaponIndex();
 
-    const float localBarrelOffsetY = 400.f;
+    if (currentIndex < 0 || currentIndex >= m_weaponBulletRects.size()) {
+        currentIndex = 0;
+    }
+
+    sf::IntRect bulletRect = m_weaponBulletRects[currentIndex];
+    sf::Vector2f barrelOffset = m_weaponBarrelOffsets[currentIndex];
+    float animSpeed = m_weaponBulletAnimSpeeds[currentIndex];
+    int animFrames = m_weaponBulletAnimFrames[currentIndex];
+
+    const float localBarrelOffsetX = barrelOffset.x;
+    const float localBarrelOffsetY = barrelOffset.y;
 
     sf::Vector2f localBarrelPos(localBarrelOffsetX, localBarrelOffsetY);
     sf::Transform playerTransform = playerSprite.getTransform();
@@ -124,6 +184,6 @@ Bullet Player::shoot(sf::Vector2f mousePosition) {
     sf::Vector2f barrelPosition = playerTransform.transformPoint(localBarrelPos);
 
     sf::Vector2f direction = mousePosition - barrelPosition;
-
-    return Bullet(bulletTexture, pistolBulletRect, barrelPosition, direction);
+    return Bullet(bulletTexture, bulletRect, barrelPosition, direction,
+                  animSpeed, animFrames);
 }

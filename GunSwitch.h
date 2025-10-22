@@ -11,6 +11,7 @@ public:
     void nextWeapon();
     void previousWeapon();
     sf::IntRect getCurrentWeaponRect() const;
+    int getCurrentWeaponIndex() const;
 
     friend std::ostream& operator<<(std::ostream& os, const GunSwitch& switcher);
 

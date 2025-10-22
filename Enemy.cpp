@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath> // Adaugă asta pentru std::sqrt și std::atan2
 
-// Constructorul e corectat să inițializeze textură/sprite
 Enemy::Enemy(float startX, float startY)
     : health(50.f), m_position(startX, startY),
       enemyTexture(),
