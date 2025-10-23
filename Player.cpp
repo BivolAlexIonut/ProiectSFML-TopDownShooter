@@ -18,7 +18,7 @@ Player::Player(float startX, float startY) :
     if (!this->playerTexture.loadFromFile("../assets/Premium Content/Examples/Basic Usage.png")) {
         std::cerr << "EROARE: Nu am putut incarca ../assets/Premium Content/Examples/Basic Usage.png" << std::endl;
     }
-    if (!this->bulletTexture.loadFromFile("/home/alex/proiect-fac-sfml/assets/Bullets.png")) {
+    if (!this->bulletTexture.loadFromFile("/home/alex/proiect-fac-sfml/ProiectSFML-TopDownShooter/assets/Bullets.png")) {
         std::cerr <<"EROARE: Nu am putut incarca ../assets/Bullets.png" << std::endl;
     }
 
