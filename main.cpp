@@ -15,8 +15,8 @@ int main() {
     window.setFramerateLimit(60);
 
     GameMap gameMap;
-    if (!gameMap.load("/home/alex/proiect-fac-sfml/ProiectSFML-TopDownShooter/assets/Levels/level1.json",
-                      "/home/alex/proiect-fac-sfml/ProiectSFML-TopDownShooter/assets/Premium Content/Tileset with cell size 256x256.png")) {
+    if (!gameMap.load("/home/alex/proiect-fac-sfml/assets/Levels/level1.json",
+                      "/home/alex/proiect-fac-sfml/assets/Premium Content/Tileset with cell size 256x256.png")) {
         std::cerr << "EROARE FATALA: Harta nu a putut fi incarcata." << std::endl;
         return -1;
                       }
@@ -57,6 +57,18 @@ int main() {
     sf::Clock shootTimer;
     const float shootCooldown = 0.2f;
 
+    //UI Ammo
+    sf::Font ammoFont;
+    if (!ammoFont.openFromFile("/home/alex/proiect-fac-sfml/fonts/m6x11.ttf")) {
+        std::cerr << "EROARE: Nu am putut incarca fontul assets/arial.ttf" << std::endl;
+        return -1;
+    }
+    sf::Text ammoText(ammoFont);
+    ammoText.setFont(ammoFont);
+    ammoText.setCharacterSize(24);
+    ammoText.setFillColor(sf::Color::White);
+
+
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
 
@@ -72,12 +84,16 @@ int main() {
                 if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Q) {
                     player.switchWeaponPrev();
                 }
+                if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::R) {
+                    player.reload();
+                }
             }
         }
 
         sf::Vector2i mousePositionWindow = sf::Mouse::getPosition(window);
         sf::Vector2f mousePositionWorld = window.mapPixelToCoords(mousePositionWindow,camera);
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && shootTimer.getElapsedTime().asSeconds() > player.getCurrentWeaponCooldown()) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && shootTimer.getElapsedTime().asSeconds() > player.getCurrentWeaponCooldown()
+            && player.canShoot()) {
             //Creez glnt si trag
             bullets.push_back((player.shoot(mousePositionWorld)));
             shootTimer.restart();
@@ -96,6 +112,9 @@ int main() {
             bullet.update(dt.asSeconds());
         }
 
+        std::string ammoString = std::to_string(player.getCurrentAmmo())+ " / " + std::to_string(player.getReserveAmmo());
+        ammoText.setString(ammoString);
+
         window.clear(sf::Color(30, 30, 30));
         window.setView(camera);
         gameMap.draw(window);
@@ -107,6 +126,12 @@ int main() {
         for (auto& bullet : bullets) {
             bullet.draw(window);
         }
+        window.setView(window.getDefaultView());
+
+        sf::Vector2f viewSize = window.getDefaultView().getSize();
+        ammoText.setPosition({10.f, viewSize.y - ammoText.getCharacterSize() - 10.f});
+
+        window.draw(ammoText);
 
         window.display();
     }

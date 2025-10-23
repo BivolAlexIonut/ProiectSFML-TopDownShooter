@@ -21,6 +21,12 @@ public:
     Bullet shoot(sf::Vector2f mousePosition);
     float getCurrentWeaponCooldown() const;
 
+    int getCurrentAmmo() const;
+    int getReserveAmmo() const;
+
+    void reload();
+    bool canShoot() const;
+
     friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
 private:
@@ -41,4 +47,8 @@ private:
     std::vector<float> m_weaponBulletAnimSpeeds;
     std::vector<int> m_weaponBulletAnimFrames;
     std::vector<float> m_weaponShootCooldowns;
+
+    std::vector<int> weaponMagSize;
+    std::vector<int> weaponCurrentAmmo;
+    std::vector<int> weaponReserveAmmo;
 };

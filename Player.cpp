@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <ostream>
+#include <algorithm>
 
 const float PI = 3.14159265358979323846f;
 const float HEALTHBAR_WIDTH = 300.f;
@@ -18,7 +19,7 @@ Player::Player(float startX, float startY) :
     if (!this->playerTexture.loadFromFile("../assets/Premium Content/Examples/Basic Usage.png")) {
         std::cerr << "EROARE: Nu am putut incarca ../assets/Premium Content/Examples/Basic Usage.png" << std::endl;
     }
-    if (!this->bulletTexture.loadFromFile("/home/alex/proiect-fac-sfml/ProiectSFML-TopDownShooter/assets/Bullets.png")) {
+    if (!this->bulletTexture.loadFromFile("/home/alex/proiect-fac-sfml/assets/Bullets.png")) {
         std::cerr <<"EROARE: Nu am putut incarca ../assets/Bullets.png" << std::endl;
     }
 
@@ -28,6 +29,9 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimSpeeds.push_back(0.1f); // viteza animatie (0.1 secunde pe frame)
     m_weaponBulletAnimFrames.push_back(4);    // nr. frame-uri (are 4 frame-uri)
     m_weaponShootCooldowns.push_back(1.f);
+    weaponMagSize.push_back(7);        // Pistol mag size
+    weaponCurrentAmmo.push_back(7);     // Start plin
+    weaponReserveAmmo.push_back(35);
 
     // PISTOLERO
     m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 468.f)); // De ajustat
@@ -35,6 +39,9 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimSpeeds.push_back(0.1f); // Animatie mai rapida
     m_weaponBulletAnimFrames.push_back(4);     // Poate are doar 3 frame-uri (0, 1, 2)
     m_weaponShootCooldowns.push_back(0.3f);
+    weaponMagSize.push_back(20);
+    weaponCurrentAmmo.push_back(20);
+    weaponReserveAmmo.push_back(100);
 
     // AGHEU
     m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 548.f)); // De ajustat
@@ -42,7 +49,9 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimSpeeds.push_back(0.1f); // Animatie mai lenta
     m_weaponBulletAnimFrames.push_back(4);    // Are 4 frame-uri
     m_weaponShootCooldowns.push_back(1.f);
-
+    weaponMagSize.push_back(3);
+    weaponCurrentAmmo.push_back(3);
+    weaponReserveAmmo.push_back(9);
 
     // SMG
     m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 398.f));
@@ -50,6 +59,9 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimSpeeds.push_back(0.1f);
     m_weaponBulletAnimFrames.push_back(4);
     m_weaponShootCooldowns.push_back(0.2f);
+    weaponMagSize.push_back(30);
+    weaponCurrentAmmo.push_back(30);
+    weaponReserveAmmo.push_back(120);
 
     // ShotGUN
     m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 491.f));
@@ -57,6 +69,9 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimSpeeds.push_back(0.35f);
     m_weaponBulletAnimFrames.push_back(3);
     m_weaponShootCooldowns.push_back(1.2f);
+    weaponMagSize.push_back(8);
+    weaponCurrentAmmo.push_back(8);
+    weaponReserveAmmo.push_back(16);
 
     // SNIPER
     m_weaponBarrelOffsets.push_back(sf::Vector2f(133.f, 558.f));
@@ -64,6 +79,9 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimSpeeds.push_back(0.2f);
     m_weaponBulletAnimFrames.push_back(4);
     m_weaponShootCooldowns.push_back(2.f);
+    weaponMagSize.push_back(5);
+    weaponCurrentAmmo.push_back(5);
+    weaponReserveAmmo.push_back(10);
 
     sf::IntRect skinRect = m_gunSwitch.getCurrentWeaponRect();
     this->playerSprite.setTextureRect(skinRect);
@@ -165,6 +183,10 @@ void Player::switchWeaponPrev() {
 
 Bullet Player::shoot(sf::Vector2f mousePosition) {
     int currentIndex = m_gunSwitch.getCurrentWeaponIndex();
+    //Scad munitita
+    if (currentIndex >= 0 && currentIndex < weaponCurrentAmmo.size() ) {
+        weaponCurrentAmmo[currentIndex] --;
+    }
 
     if (currentIndex < 0 || currentIndex >= m_weaponBulletRects.size()) {
         currentIndex = 0;
@@ -186,4 +208,45 @@ Bullet Player::shoot(sf::Vector2f mousePosition) {
     sf::Vector2f direction = mousePosition - barrelPosition;
     return Bullet(bulletTexture, bulletRect, barrelPosition, direction,
                   animSpeed, animFrames);
+}
+
+bool Player::canShoot() const{
+    int index = m_gunSwitch.getCurrentWeaponIndex();
+    if (index < 0 || index >= weaponCurrentAmmo.size())
+        return false;
+    return weaponCurrentAmmo[index];
+}
+
+void Player::reload() {
+    int index = m_gunSwitch.getCurrentWeaponIndex();
+    if(index < 0 || index >=weaponMagSize.size())return;
+
+    int magSize = weaponMagSize[index];
+    int currentAmmo = weaponCurrentAmmo[index];
+    int &reserveAmmo = weaponReserveAmmo[index];
+
+    int amountNeeded = magSize - currentAmmo;
+    if (amountNeeded <= 0 || reserveAmmo <= 0) {
+        return;
+    }
+
+    //cat mut din rezerva in incarcator
+    int ammoToMove = std::min(amountNeeded, reserveAmmo);
+    weaponCurrentAmmo[index] += ammoToMove;
+    reserveAmmo -= ammoToMove;
+
+    //debug
+    std::cout<<"Reloaded ammo: "<<weaponCurrentAmmo[index]<<"/"<<reserveAmmo<<std::endl;
+}
+
+int Player::getCurrentAmmo() const {
+    int index = m_gunSwitch.getCurrentWeaponIndex();
+    if (index < 0 || index >= weaponCurrentAmmo.size())return 0;
+    return weaponCurrentAmmo[index];
+}
+
+int Player::getReserveAmmo() const {
+    int index = m_gunSwitch.getCurrentWeaponIndex();
+    if (index < 0 || index >= weaponReserveAmmo.size()) return 0;
+    return weaponReserveAmmo[index];
 }
