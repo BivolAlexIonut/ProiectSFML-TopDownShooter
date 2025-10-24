@@ -13,8 +13,8 @@ int main() {
     window.setFramerateLimit(60);
 
     GameMap gameMap;
-    if (!gameMap.load("/home/alex/proiect-fac-sfml/assets/Levels/level1.json",
-                      "/home/alex/proiect-fac-sfml/assets/Premium Content/Tileset with cell size 256x256.png")) {
+    if (!gameMap.load("../assets/Levels/level1.json",
+                      "../assets//Premium Content/Tileset with cell size 256x256.png")) {
         std::cerr << "EROARE FATALA: Harta nu a putut fi incarcata." << std::endl;
         return -1;
                       }
@@ -39,7 +39,7 @@ int main() {
 
     //UI Ammo
     sf::Font ammoFont;
-    if (!ammoFont.openFromFile("/home/alex/proiect-fac-sfml/fonts/m6x11.ttf")) {
+    if (!ammoFont.openFromFile("../fonts/m6x11.ttf")) {
         std::cerr << "EROARE: Nu am putut incarca fontul assets/arial.ttf" << std::endl;
         return -1;
     }
