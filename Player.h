@@ -12,6 +12,7 @@ public:
 
     void update(float dt, sf::Vector2f mousePosition);
     void draw(sf::RenderWindow& window) const;
+    void drawUI(sf::RenderWindow& window);
     void takeDamage(float damage);
     sf::Vector2f getPosition() const;
 
@@ -56,4 +57,11 @@ private:
     std::vector<float> m_weaponReloadTime;
     bool m_isReloading;
     sf::Clock m_reloadTimer;
+
+    sf::Texture m_reloadAnimTexture;
+    sf::Sprite m_reloadAnimSprite;
+    std::vector<sf::IntRect> m_reloadAnimFrames;
+    sf::Vector2f m_reloadAnimPosition;
+    int m_reloadingWeaponIndex;
+    float m_currentReloadTotalTime;
 };

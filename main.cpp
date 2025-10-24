@@ -23,29 +23,12 @@ int main() {
     const float mapScale = 0.4f;
     Player player(1000.f * mapScale, 1000.f * mapScale);
 
-    //BLOC DEBUG
-    {
-        std::cout << "Testare Regula celor 3 pentru clasa Health:" << std::endl;
-        Health h1(50.f);
-        Health h2 = h1;
-        Health h3(100.f);
-        h3 = h1;
-        std::cout << "h3: " << h3 << std::endl;
-    }
-
     Enemy enemy1(100.f, 200.f);
     std::vector<Enemy> enemies;
     enemies.push_back(enemy1);
 
     player.takeDamage(25.f);
     enemies[0].takeDamage(10.f);
-
-    std::cout << "\nTestare operator<< :" << std::endl;
-    std::cout << player << std::endl;
-    std::cout << enemies[0] << std::endl;
-    std::cout << gameMap << std::endl; // Acum ar trebui să funcționeze
-    std::cout << "--- Sfarșit testare cerințe POO. incepe jocul. ---" << std::endl;
-    //  SFaRȘIT BLOC
 
     sf::Clock clock;
     sf::View camera;
@@ -55,7 +38,6 @@ int main() {
     //Bullets
     std::vector<Bullet> bullets;
     sf::Clock shootTimer;
-    const float shootCooldown = 0.2f;
 
     //UI Ammo
     sf::Font ammoFont;
@@ -65,7 +47,7 @@ int main() {
     }
     sf::Text ammoText(ammoFont);
     ammoText.setFont(ammoFont);
-    ammoText.setCharacterSize(24);
+    ammoText.setCharacterSize(56);
     ammoText.setFillColor(sf::Color::White);
 
 
@@ -132,6 +114,7 @@ int main() {
         ammoText.setPosition({10.f, viewSize.y - ammoText.getCharacterSize() - 10.f});
 
         window.draw(ammoText);
+        player.drawUI(window);
 
         window.display();
     }
