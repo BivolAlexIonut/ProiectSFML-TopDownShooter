@@ -5,8 +5,6 @@
 #include <iostream>
 #include <vector>
 #include "Enemy.h"
-#include "Health.h"
-#include "GunSwitch.h"
 #include <ostream>
 
 
@@ -48,7 +46,7 @@ int main() {
     sf::Text ammoText(ammoFont);
     ammoText.setFont(ammoFont);
     ammoText.setCharacterSize(56);
-    ammoText.setFillColor(sf::Color::White);
+    ammoText.setFillColor(sf::Color::Black);
 
 
     while (window.isOpen()) {
@@ -86,8 +84,8 @@ int main() {
         camera.setCenter(player.getPosition());
 
         sf::Vector2f playerPos = player.getPosition();
-        for (auto& enemy : enemies) {
-            enemy.update(dt.asSeconds(), playerPos);
+        for ([[maybe_unused]] auto& enemy : enemies) {
+            Enemy::update(dt.asSeconds(), playerPos);
         }
 
         for (auto& bullet : bullets) {
@@ -111,7 +109,7 @@ int main() {
         window.setView(window.getDefaultView());
 
         sf::Vector2f viewSize = window.getDefaultView().getSize();
-        ammoText.setPosition({10.f, viewSize.y - ammoText.getCharacterSize() - 10.f});
+        ammoText.setPosition({10.f, viewSize.y - static_cast<float>(ammoText.getCharacterSize()) - 10.f});
 
         window.draw(ammoText);
         player.drawUI(window);

@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <ostream>
 
 class GunSwitch {
 public:
@@ -10,8 +9,8 @@ public:
 
     void nextWeapon();
     void previousWeapon();
-    sf::IntRect getCurrentWeaponRect() const;
-    int getCurrentWeaponIndex() const;
+    [[nodiscard]] sf::IntRect getCurrentWeaponRect() const;
+    [[nodiscard]] int getCurrentWeaponIndex() const;
 
     friend std::ostream& operator<<(std::ostream& os, const GunSwitch& switcher);
 

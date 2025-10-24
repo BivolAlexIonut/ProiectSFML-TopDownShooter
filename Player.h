@@ -3,7 +3,6 @@
 #include "Health.h"
 #include "GunSwitch.h"
 #include "Bullet.h"
-#include <ostream>
 
 class Player {
 public:
@@ -63,5 +62,5 @@ private:
     std::vector<sf::IntRect> m_reloadAnimFrames;
     sf::Vector2f m_reloadAnimPosition;
     int m_reloadingWeaponIndex;
-    float m_currentReloadTotalTime;
+    float m_currentReloadTotalTime{};
 };

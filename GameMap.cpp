@@ -8,7 +8,7 @@ using json = nlohmann::json;
 
 GameMap::GameMap() : m_tileSize(0, 0), m_mapSize(0, 0) {}
 
-GameMap::~GameMap() {}
+GameMap::~GameMap() = default;
 
 bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) {
     if (!m_tilesetTexture.loadFromFile(tilesetPath)) {
@@ -46,7 +46,7 @@ bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) 
     for (unsigned int y = 0; y < m_mapSize.y; ++y) {
         for (unsigned int x = 0; x < m_mapSize.x; ++x) {
 
-            int tileIndex = y * m_mapSize.x + x;
+            int tileIndex = static_cast<int>(y) * static_cast<int>(m_mapSize.x) + static_cast<int>(x);
             int tileID = tileIDs[tileIndex];
 
             if (tileID == 0) {
@@ -55,14 +55,14 @@ bool GameMap::load(const std::string& jsonPath, const std::string& tilesetPath) 
 
             int id = tileID - 1;
 
-            int texX = (id % tilesetColumns) * m_tileSize.x;
-            int texY = (id / tilesetColumns) * m_tileSize.y;
+            int texX = (id % static_cast<int>(tilesetColumns)) * static_cast<int>(m_tileSize.x);
+            int texY = (id / static_cast<int>(tilesetColumns)) * static_cast<int>(m_tileSize.y);
 
             sf::Sprite tileSprite(m_tilesetTexture);
             tileSprite.setTextureRect(sf::IntRect({(int)texX, (int)texY}, {(int)m_tileSize.x, (int)m_tileSize.y}));
             tileSprite.setScale({mapScale, mapScale});
-            tileSprite.setPosition({ (float)(x * m_tileSize.x * mapScale),
-                                     (float)(y * m_tileSize.y * mapScale) });
+            tileSprite.setPosition({ static_cast<float>(x) * static_cast<float>(m_tileSize.x) * mapScale,
+                         static_cast<float>(y) * static_cast<float>(m_tileSize.y) * mapScale });
             m_tiles.push_back(tileSprite);
         }
     }

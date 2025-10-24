@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <ostream>
 
 class Enemy {
 public:
@@ -8,7 +7,7 @@ public:
     ~Enemy();
     void draw(sf::RenderWindow& window);
 
-    void update(float dt, sf::Vector2f playerPosition);
+    static void update(float dt, sf::Vector2f playerPosition);
 
     void takeDamage(float damage);
     sf::Vector2f getPosition() const;

@@ -1,6 +1,4 @@
 #include "Enemy.h"
-#include <iostream>
-#include <cmath> // Adaugă asta pentru std::sqrt și std::atan2
 
 Enemy::Enemy(float startX, float startY)
     : health(50.f), m_position(startX, startY),
@@ -9,13 +7,15 @@ Enemy::Enemy(float startX, float startY)
 {
 }
 
-Enemy::~Enemy() {}
+Enemy::~Enemy() = default;
 
 void Enemy::draw(sf::RenderWindow& window) {
-    //window.draw(this->enemySprite);
+    window.draw(this->enemySprite);
 }
 
 void Enemy::update(float dt, sf::Vector2f playerPosition) {
+    (void)dt;
+    (void)playerPosition;
 }
 
 void Enemy::takeDamage(float damage) {

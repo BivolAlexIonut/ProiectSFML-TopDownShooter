@@ -17,11 +17,11 @@ int GunSwitch::getCurrentWeaponIndex() const {
 }
 
 
-GunSwitch::~GunSwitch() {}
+GunSwitch::~GunSwitch() = default;
 
 void GunSwitch::nextWeapon() {
     m_currentWeaponIndex++;
-    if (m_currentWeaponIndex >= m_weaponRects.size()) {
+    if (static_cast<size_t>(m_currentWeaponIndex) >= m_weaponRects.size()) {
         m_currentWeaponIndex = 0;
     }
     std::cout << "DEBUG: Am schimbat la arma: " << m_currentWeaponIndex << std::endl;
@@ -30,7 +30,7 @@ void GunSwitch::nextWeapon() {
 void GunSwitch::previousWeapon() {
     m_currentWeaponIndex--;
     if (m_currentWeaponIndex < 0) {
-        m_currentWeaponIndex = m_weaponRects.size() - 1; // Revine la ultima armă
+        m_currentWeaponIndex = static_cast<int>(m_weaponRects.size()) - 1;
     }
     std::cout << "DEBUG: Am schimbat la arma: " << m_currentWeaponIndex << std::endl;
 }

@@ -3,16 +3,16 @@
 
 class Health {
 public:
-    Health(float maxHealth = 100.f);
+    explicit Health(float maxHealth = 100.f);
 
     Health(const Health& other);
     Health& operator=(const Health& other);
     ~Health();
 
     void takeDamage(float amount);
-    float getPercentage() const;
-    float getCurrent() const;
-    float getMax() const;
+    [[nodiscard]] float getPercentage() const;
+    [[nodiscard]] float getCurrent() const;
+    [[nodiscard]] float getMax() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Health& health);
 

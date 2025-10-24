@@ -149,8 +149,8 @@ Player::Player(float startX, float startY) :
     updateHealthBarPosition();
 
     this->playerSprite.scale({0.2f,0.2f});
-    this->playerSprite.setOrigin({skinRect.size.x / 2.f, skinRect.size.y / 2.f});
-    this->playerSprite.setPosition({640, 360});
+    this->playerSprite.setOrigin({static_cast<float>(skinRect.size.x) / 2.f, static_cast<float>(skinRect.size.y) / 2.f});
+    this->playerSprite.setPosition({startX, startY});
     this->movementSpeed = 270.f;
 }
 
@@ -182,7 +182,7 @@ void Player::updateHealthBar() {
 
 float Player::getCurrentWeaponCooldown() const {
     int index = m_gunSwitch.getCurrentWeaponIndex();
-    if (index < 0 || index >= m_weaponShootCooldowns.size()) {
+    if (index < 0 || static_cast<size_t>(index) >= m_weaponShootCooldowns.size()) {
         return 0.3f;
     }
     return m_weaponShootCooldowns[index];
@@ -225,10 +225,10 @@ void Player::update(float dt, sf::Vector2f mousePosition) {
         }
 
         float elapsedTime = m_reloadTimer.getElapsedTime().asSeconds();
-        int frameCount = m_reloadAnimFrames.size();
+        int frameCount = static_cast<int>(m_reloadAnimFrames.size());
 
         float reloadProgress = elapsedTime / m_currentReloadTotalTime;
-        int currentFrameIndex = static_cast<int>(reloadProgress * frameCount);
+        int currentFrameIndex = static_cast<int>(reloadProgress * static_cast<float>(frameCount));
         if (currentFrameIndex >= frameCount) {
             currentFrameIndex = frameCount - 1;
         }
@@ -272,7 +272,7 @@ void Player::switchWeaponNext() {
     m_gunSwitch.nextWeapon();
     sf::IntRect newRect = m_gunSwitch.getCurrentWeaponRect();
     this->playerSprite.setTextureRect(newRect);
-    this->playerSprite.setOrigin({newRect.size.x / 2.f, newRect.size.y / 2.f});
+    this->playerSprite.setOrigin({static_cast<float>(newRect.size.x) / 2.f, static_cast<float>(newRect.size.y) / 2.f});
 }
 
 void Player::switchWeaponPrev() {
@@ -281,17 +281,17 @@ void Player::switchWeaponPrev() {
     m_gunSwitch.previousWeapon();
     sf::IntRect newRect = m_gunSwitch.getCurrentWeaponRect();
     this->playerSprite.setTextureRect(newRect);
-    this->playerSprite.setOrigin({newRect.size.x / 2.f, newRect.size.y / 2.f});
+    this->playerSprite.setOrigin({static_cast<float>(newRect.size.x) / 2.f, static_cast<float>(newRect.size.y) / 2.f});
 }
 
 
 Bullet Player::shoot(sf::Vector2f mousePosition) {
     int currentIndex = m_gunSwitch.getCurrentWeaponIndex();
-    if (currentIndex >= 0 && currentIndex < weaponCurrentAmmo.size() ) {
+    if (currentIndex >= 0 && static_cast<size_t>(currentIndex) < weaponCurrentAmmo.size() ) {
         weaponCurrentAmmo[currentIndex] --;
     }
 
-    if (currentIndex < 0 || currentIndex >= m_weaponBulletAnimRects.size()) {
+    if (currentIndex < 0 || static_cast<size_t>(currentIndex) >= m_weaponBulletAnimRects.size()) {
         currentIndex = 0;
     }
 
@@ -310,8 +310,8 @@ Bullet Player::shoot(sf::Vector2f mousePosition) {
 
     sf::Vector2f direction = mousePosition - barrelPosition;
 
-    return Bullet(bulletTexture, bulletAnimRects, barrelPosition, direction,
-                  animSpeed);
+    return {bulletTexture, bulletAnimRects, barrelPosition, direction,
+        animSpeed};
 }
 
 bool Player::canShoot(sf::Vector2f mousePosition) const{
@@ -324,7 +324,7 @@ bool Player::canShoot(sf::Vector2f mousePosition) const{
     }
 
     int index = m_gunSwitch.getCurrentWeaponIndex();
-    if (index < 0 || index >= weaponCurrentAmmo.size())
+    if (index < 0 || static_cast<size_t>(index) >= weaponCurrentAmmo.size())
         return false;
     return weaponCurrentAmmo[index] > 0;
 }
@@ -342,10 +342,10 @@ void Player::reload() {
     int index = m_gunSwitch.getCurrentWeaponIndex();
 
     if (index < 0 ||
-        index >= m_weaponReloadTime.size() ||
-        index >= weaponMagSize.size() ||
-        index >= weaponCurrentAmmo.size() ||
-        index >= weaponReserveAmmo.size())
+    static_cast<size_t>(index) >= m_weaponReloadTime.size() ||
+    static_cast<size_t>(index) >= weaponMagSize.size() ||
+    static_cast<size_t>(index) >= weaponCurrentAmmo.size() ||
+    static_cast<size_t>(index) >= weaponReserveAmmo.size())
     {
         std::cerr << "Eroare: Date de reincarcare invalide pentru indexul " << index << std::endl;
         return;
@@ -370,12 +370,12 @@ void Player::reload() {
 
 int Player::getCurrentAmmo() const {
     int index = m_gunSwitch.getCurrentWeaponIndex();
-    if (index < 0 || index >= weaponCurrentAmmo.size())return 0;
+    if (index < 0 || static_cast<size_t>(index) >= weaponCurrentAmmo.size())return 0;
     return weaponCurrentAmmo[index];
 }
 
 int Player::getReserveAmmo() const {
     int index = m_gunSwitch.getCurrentWeaponIndex();
-    if (index < 0 || index >= weaponReserveAmmo.size()) return 0;
+    if (index < 0 || static_cast<size_t>(index) >= weaponReserveAmmo.size()) return 0;
     return weaponReserveAmmo[index];
 }

@@ -6,14 +6,18 @@ const float PI = 3.14159265358979323846f;
 Bullet::Bullet(sf::Texture &texture, const std::vector<sf::IntRect> &animRects, sf::Vector2f startPos, sf::Vector2f direction,
     float animSpeed)
     : bulletSprite(texture),
+      bulletVelocity{},
+      bulletRect{},
+      bulletTimer{},
       m_animRects(animRects),
+      bulletCurrentFrame(0),
       bulletAnimSpeed(animSpeed),
-      bulletCurrentFrame(0)
+      m_animFrames(static_cast<int>(animRects.size()))
 {
     bulletSprite.setTextureRect(m_animRects[0]);
 
-    float originX = m_animRects[0].size.x / 2.f;
-    float originY = m_animRects[0].size.y / 2.f;
+    float originX = static_cast<float>(m_animRects[0].size.x) / 2.f;
+    float originY = static_cast<float>(m_animRects[0].size.y) / 2.f;
     bulletSprite.setOrigin({originX, originY});
 
     float angleInRadians = std::atan2(direction.y, direction.x);
@@ -28,7 +32,7 @@ Bullet::Bullet(sf::Texture &texture, const std::vector<sf::IntRect> &animRects, 
     bulletVelocity = direction * speed;
 }
 
-Bullet::~Bullet(){}
+Bullet::~Bullet()= default;
 
 void Bullet::update(float dt) {
     //miscarea glontului
@@ -38,7 +42,7 @@ void Bullet::update(float dt) {
         bulletCurrentFrame++;
         bulletTimer.restart();
     }
-    if (bulletCurrentFrame >= m_animRects.size()) {
+    if (static_cast<size_t>(bulletCurrentFrame) >= m_animRects.size()) {
         bulletCurrentFrame = 0;
     }
 
