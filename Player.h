@@ -25,6 +25,7 @@ public:
     int getReserveAmmo() const;
 
     void reload();
+    bool isReloading() const;
     bool canShoot() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Player& player);
@@ -51,4 +52,8 @@ private:
     std::vector<int> weaponMagSize;
     std::vector<int> weaponCurrentAmmo;
     std::vector<int> weaponReserveAmmo;
+
+    std::vector<float> m_weaponReloadTime;
+    bool m_isReloading;
+    sf::Clock m_reloadTimer;
 };

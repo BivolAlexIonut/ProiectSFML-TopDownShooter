@@ -14,7 +14,8 @@ Player::Player(float startX, float startY) :
     playerTexture(),
     playerSprite(this->playerTexture),
     m_health(100.f),
-    m_gunSwitch()
+    m_gunSwitch(),
+    m_isReloading(false)//Incep prin a nu reincarca
 {
     if (!this->playerTexture.loadFromFile("../assets/Premium Content/Examples/Basic Usage.png")) {
         std::cerr << "EROARE: Nu am putut incarca ../assets/Premium Content/Examples/Basic Usage.png" << std::endl;
@@ -33,6 +34,7 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimRects.push_back(pistolFrames);
     m_weaponBulletAnimSpeeds.push_back(0.1f);
     m_weaponShootCooldowns.push_back(0.5f);
+    m_weaponReloadTime.emplace_back(0.5f);
     weaponMagSize.push_back(7);
     weaponCurrentAmmo.push_back(7);
     weaponReserveAmmo.push_back(35);
@@ -47,6 +49,7 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimRects.push_back(tommyFrames);
     m_weaponBulletAnimSpeeds.push_back(0.1f);
     m_weaponShootCooldowns.push_back(0.08f);
+    m_weaponReloadTime.emplace_back(1.f);
     weaponMagSize.push_back(75);
     weaponCurrentAmmo.push_back(75);
     weaponReserveAmmo.push_back(150);
@@ -62,6 +65,7 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimRects.push_back(rpgFrames);
     m_weaponBulletAnimSpeeds.push_back(0.1f);
     m_weaponShootCooldowns.push_back(1.2f);
+    m_weaponReloadTime.emplace_back(3.f);
     weaponMagSize.push_back(3);
     weaponCurrentAmmo.push_back(3);
     weaponReserveAmmo.push_back(9);
@@ -76,6 +80,7 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimRects.push_back(smgFrames);
     m_weaponBulletAnimSpeeds.push_back(0.1f);
     m_weaponShootCooldowns.push_back(0.02f);
+    m_weaponReloadTime.emplace_back(0.8f);
     weaponMagSize.push_back(35);
     weaponCurrentAmmo.push_back(35);
     weaponReserveAmmo.push_back(120);
@@ -90,6 +95,7 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimRects.push_back(shotgunFrames);
     m_weaponBulletAnimSpeeds.push_back(0.05f);
     m_weaponShootCooldowns.push_back(1.f);
+    m_weaponReloadTime.emplace_back(1.5f);
     weaponMagSize.push_back(8);
     weaponCurrentAmmo.push_back(8);
     weaponReserveAmmo.push_back(16);
@@ -105,6 +111,7 @@ Player::Player(float startX, float startY) :
     m_weaponBulletAnimRects.push_back(sniperFrames);
     m_weaponBulletAnimSpeeds.push_back(0.1f);
     m_weaponShootCooldowns.push_back(2.f);
+    m_weaponReloadTime.emplace_back(2.f);
     weaponMagSize.push_back(5);
     weaponCurrentAmmo.push_back(5);
     weaponReserveAmmo.push_back(10);
@@ -180,6 +187,25 @@ void Player::update(float dt, sf::Vector2f mousePosition) {
     float angleInDegrees = angleInRadians * (180.f / PI);
     this->playerSprite.setRotation(sf::degrees(angleInDegrees-90.f));
     updateHealthBarPosition();
+
+    //verific starea de reincarcare
+    if (m_isReloading) {
+        int index = m_gunSwitch.getCurrentWeaponIndex();
+        float currentReloadTime = m_weaponReloadTime[index];
+        //verific daca a trecut timpul
+        if (m_reloadTimer.getElapsedTime().asSeconds() >= currentReloadTime) {
+            m_isReloading = false;
+            int magSize = weaponMagSize[index];
+            int currentAmmo = weaponCurrentAmmo[index];
+            int &reserveAmmo = weaponReserveAmmo[index];
+
+            int amountNeeded = magSize - currentAmmo;
+
+            int ammoToMove = std::min(amountNeeded, reserveAmmo);
+            weaponCurrentAmmo[index] += ammoToMove;
+            reserveAmmo -= ammoToMove;
+        }
+    }
 }
 
 sf::Vector2f Player::getPosition() const {
@@ -237,29 +263,42 @@ Bullet Player::shoot(sf::Vector2f mousePosition) {
 }
 
 bool Player::canShoot() const{
+    if (m_isReloading) {
+        return false;
+    }
+
     int index = m_gunSwitch.getCurrentWeaponIndex();
     if (index < 0 || index >= weaponCurrentAmmo.size())
         return false;
-    return weaponCurrentAmmo[index];
+    return weaponCurrentAmmo[index] > 0;
 }
+
+bool Player::isReloading() const {
+    return m_isReloading;
+}
+
 
 void Player::reload() {
     int index = m_gunSwitch.getCurrentWeaponIndex();
-    if(index < 0 || index >=weaponMagSize.size())return;
+    if(index < 0 || index >= weaponMagSize.size())return;
 
     int magSize = weaponMagSize[index];
     int currentAmmo = weaponCurrentAmmo[index];
     int &reserveAmmo = weaponReserveAmmo[index];
 
+    if (m_isReloading)return;
+
     int amountNeeded = magSize - currentAmmo;
     if (amountNeeded <= 0 || reserveAmmo <= 0) {
         return;
     }
+    m_isReloading = true;
+    m_reloadTimer.restart();
 
     //cat mut din rezerva in incarcator
-    int ammoToMove = std::min(amountNeeded, reserveAmmo);
+    /*int ammoToMove = std::min(amountNeeded, reserveAmmo);
     weaponCurrentAmmo[index] += ammoToMove;
-    reserveAmmo -= ammoToMove;
+    reserveAmmo -= ammoToMove;*/
 
     //debug
     std::cout<<"Reloaded ammo: "<<weaponCurrentAmmo[index]<<"/"<<reserveAmmo<<std::endl;
