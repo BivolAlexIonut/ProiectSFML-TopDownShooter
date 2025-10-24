@@ -75,7 +75,7 @@ int main() {
         sf::Vector2i mousePositionWindow = sf::Mouse::getPosition(window);
         sf::Vector2f mousePositionWorld = window.mapPixelToCoords(mousePositionWindow,camera);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && shootTimer.getElapsedTime().asSeconds() > player.getCurrentWeaponCooldown()
-            && player.canShoot()) {
+            && player.canShoot(mousePositionWorld)) {
             //Creez glnt si trag
             bullets.push_back((player.shoot(mousePositionWorld)));
             shootTimer.restart();

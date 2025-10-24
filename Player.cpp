@@ -314,8 +314,12 @@ Bullet Player::shoot(sf::Vector2f mousePosition) {
                   animSpeed);
 }
 
-bool Player::canShoot() const{
+bool Player::canShoot(sf::Vector2f mousePosition) const{
     if (m_isReloading) {
+        return false;
+    }
+
+    if (this->playerSprite.getGlobalBounds().contains(mousePosition)) {
         return false;
     }
 

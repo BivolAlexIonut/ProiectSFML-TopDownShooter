@@ -27,7 +27,7 @@ public:
 
     void reload();
     bool isReloading() const;
-    bool canShoot() const;
+    bool canShoot(sf::Vector2f mousePosition) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Player& player);
 
