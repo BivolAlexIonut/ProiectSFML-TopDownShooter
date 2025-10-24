@@ -57,10 +57,9 @@ jobs:
       - name: Checkout repo
         # renovate: datasource=github-tags depName=actions/checkout versioning=loose
         uses: actions/checkout@v5.0.0
-        
-      - name: Install X11 dependencies
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libx11-dev libxrandr-dev libxcursor-dev libxi-dev
+
+      - name: Install packages
+        uses: ./.github/actions/install-packages
 
       - name: Run cppcheck
         uses: ./.github/actions/cppcheck
@@ -78,11 +77,11 @@ jobs:
       - name: Checkout repo
         # renovate: datasource=github-tags depName=actions/checkout versioning=loose
         uses: actions/checkout@v5.0.0
-        
-      - name: Install X11 dependencies
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libx11-dev libxrandr-dev libxcursor-dev libxi-dev
-        
+
+      # AICI ERA EROAREA (lipsea acest pas)
+      - name: Install packages
+        uses: ./.github/actions/install-packages
+
       - name: Run clang-tidy
         uses: ./.github/actions/clang-tidy
 
@@ -222,9 +221,7 @@ jobs:
       - name: Install packages
         uses: ./.github/actions/install-packages
 
-      - name: Install X11 dependencies
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libx11-dev libxrandr-dev libxcursor-dev libxi-dev
+      # AM ȘTERS DE AICI BLOCUL "Install X11 dependencies" PENTRU CĂ E ACUM INCLUS ÎN "Install packages"
 
       - name: Configure CMake
         uses: ./.github/actions/configure-cmake
