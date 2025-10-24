@@ -5,6 +5,7 @@ runs:
   using: "composite"
   steps:
     # Common Linux dependencies
+    # Common Linux dependencies
     - name: Install Linux Dependencies
       shell: bash
       if: runner.os == 'Linux'
@@ -19,7 +20,8 @@ runs:
           libx11-dev \
           libxrandr-dev \
           libxcursor-dev \
-          libxi-dev
+          libxi-dev \
+          libudev-dev   # <--- ADAUGĂ LINIA ASTA
         # https://github.com/llvm/llvm-project/issues/78354
         sudo sysctl vm.mmap_rnd_bits=28
 
