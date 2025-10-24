@@ -11,7 +11,7 @@ public:
     ~Player();
 
     void update(float dt, sf::Vector2f mousePosition);
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window) const;
     void takeDamage(float damage);
     sf::Vector2f getPosition() const;
 
@@ -45,8 +45,8 @@ private:
     std::vector<sf::IntRect> m_weaponBulletRects;
 
     std::vector<float> m_weaponBulletAnimSpeeds;
-    std::vector<int> m_weaponBulletAnimFrames;
     std::vector<float> m_weaponShootCooldowns;
+    std::vector<std::vector<sf::IntRect>> m_weaponBulletAnimRects;
 
     std::vector<int> weaponMagSize;
     std::vector<int> weaponCurrentAmmo;

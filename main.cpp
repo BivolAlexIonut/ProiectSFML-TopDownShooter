@@ -44,7 +44,7 @@ int main() {
     std::cout << player << std::endl;
     std::cout << enemies[0] << std::endl;
     std::cout << gameMap << std::endl; // Acum ar trebui să funcționeze
-    std::cout << "--- Sfârșit testare cerințe POO. Începe jocul. ---" << std::endl;
+    std::cout << "--- Sfarșit testare cerințe POO. incepe jocul. ---" << std::endl;
     //  SFaRȘIT BLOC
 
     sf::Clock clock;

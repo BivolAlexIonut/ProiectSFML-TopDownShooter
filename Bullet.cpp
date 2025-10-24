@@ -3,27 +3,27 @@
 
 const float PI = 3.14159265358979323846f;
 
-Bullet::Bullet(sf::Texture &texture, sf::IntRect &textureRect, sf::Vector2f startPos, sf::Vector2f direction,
-    float animSpeed,int animFrames)
-    :bulletSprite(texture),
-    m_animFrames(animFrames)
+Bullet::Bullet(sf::Texture &texture, const std::vector<sf::IntRect> &animRects, sf::Vector2f startPos, sf::Vector2f direction,
+    float animSpeed)
+    : bulletSprite(texture),
+      m_animRects(animRects),
+      bulletAnimSpeed(animSpeed),
+      bulletCurrentFrame(0)
 {
-    bulletCurrentFrame = 0;
-    bulletAnimSpeed = animSpeed;
-    bulletSprite.setTextureRect(textureRect);
-    bulletRect = textureRect;
+    bulletSprite.setTextureRect(m_animRects[0]);
 
-    float originX = bulletRect.size.x / 2.f;
-    float originY = bulletRect.size.y / 2.f;
+    float originX = m_animRects[0].size.x / 2.f;
+    float originY = m_animRects[0].size.y / 2.f;
     bulletSprite.setOrigin({originX, originY});
+
     float angleInRadians = std::atan2(direction.y, direction.x);
     float angleInDegrees = angleInRadians * (180.f / PI);
     bulletSprite.setRotation(sf::degrees(angleInDegrees));
 
     bulletSprite.setPosition(startPos);
-    float speed = 800.f;
+    float speed = 1500.f;
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (length!=0)
+    if (length != 0)
         direction /= length;
     bulletVelocity = direction * speed;
 }
@@ -31,19 +31,18 @@ Bullet::Bullet(sf::Texture &texture, sf::IntRect &textureRect, sf::Vector2f star
 Bullet::~Bullet(){}
 
 void Bullet::update(float dt) {
-    //miscar5ea glontului
+    //miscarea glontului
     bulletSprite.move(bulletVelocity*dt);
 
     if (bulletTimer.getElapsedTime().asSeconds() > bulletAnimSpeed){
         bulletCurrentFrame++;
         bulletTimer.restart();
     }
-    if (bulletCurrentFrame >= m_animFrames) {
+    if (bulletCurrentFrame >= m_animRects.size()) {
         bulletCurrentFrame = 0;
     }
-    sf::IntRect newRect = bulletRect;
-    newRect.position.x = bulletRect.position.x + (bulletRect.size.x * bulletCurrentFrame);
-    bulletSprite.setTextureRect(newRect);
+
+    bulletSprite.setTextureRect(m_animRects[bulletCurrentFrame]);
 }
 
 void Bullet::draw(sf::RenderWindow &window) {
