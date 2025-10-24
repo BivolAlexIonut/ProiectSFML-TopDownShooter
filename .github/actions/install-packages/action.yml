@@ -23,7 +23,8 @@ runs:
           libudev-dev \
           libogg-dev \
           libvorbis-dev \
-          libflac-dev   # <--- ADAUGĂ LINIA ASTA
+          libflac-dev \
+          xvfb          # <--- ADAUGĂ LINIA ASTA
         # https://github.com/llvm/llvm-project/issues/78354
         sudo sysctl vm.mmap_rnd_bits=28
 
