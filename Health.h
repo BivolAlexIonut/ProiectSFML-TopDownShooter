@@ -1,18 +1,24 @@
 #pragma once
-#include <iostream>
+#include <ostream>
+#include <algorithm>
 
 class Health {
 public:
-    explicit Health(float maxHealth = 100.f);
-
-    Health(const Health& other);
-    Health& operator=(const Health& other);
+    Health();
+    explicit Health(float maxHealth);
+    Health(float currentHealth, float maxHealth);
     ~Health();
 
-    void takeDamage(float amount);
-    [[nodiscard]] float getPercentage() const;
-    [[nodiscard]] float getCurrent() const;
-    [[nodiscard]] float getMax() const;
+    void takeDamage(float amount) {
+        m_currentHealth -= amount;
+        m_currentHealth = std::max(0.f, m_currentHealth);
+    }
+
+    [[nodiscard]] float getPercentage() const {
+        if (m_maxHealth <= 0.f) return 0.f;
+        return m_currentHealth / m_maxHealth;
+    }
+
 
     friend std::ostream& operator<<(std::ostream& os, const Health& health);
 
