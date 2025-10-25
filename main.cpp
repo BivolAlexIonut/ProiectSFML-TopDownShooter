@@ -48,9 +48,19 @@ int main() {
     ammoText.setCharacterSize(56);
     ammoText.setFillColor(sf::Color::Black);
 
+#ifdef GITHUB_ACTIONS
+    sf::Clock ciExitClock; // Ceas pentru a ieși automat din CI
+    const float CI_EXIT_TIME = 5.0f;
+#endif
 
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
+#ifdef GITHUB_ACTIONS
+        if (ciExitClock.getElapsedTime().asSeconds() > CI_EXIT_TIME) {
+            std::cout << "CI Auto Exit after " << CI_EXIT_TIME << " seconds." << std::endl;
+            window.close();
+        }
+#endif
 
         while (auto event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
