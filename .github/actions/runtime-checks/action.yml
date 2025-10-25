@@ -52,9 +52,9 @@ runs:
       #   ASAN_OPTIONS: detect_leaks=1
       run: |
         if [[ "${{ runner.os }}" == "Linux" ]]; then
-          cat "${INPUT_FILENAME}" | tr -d '\r' | xvfb-run ./${{ env.ZIP_NAME }}/"${EXECUTABLE_NAME}"
+          cd ./${{ env.ZIP_NAME }} && cat ../"${INPUT_FILENAME}" | tr -d '\r' | xvfb-run ./"${EXECUTABLE_NAME}"
         else
-          cat "${INPUT_FILENAME}" | tr -d '\r' | ./${{ env.ZIP_NAME }}/"${EXECUTABLE_NAME}"
+          cd ./${{ env.ZIP_NAME }} && cat ../"${INPUT_FILENAME}" | tr -d '\r' | ./"${EXECUTABLE_NAME}"
         fi
 
     - name: Sanitizers (Windows MSVC)
@@ -69,4 +69,5 @@ runs:
       shell: bash
       if: runner.os == 'Linux' && matrix.runs_valgrind == true
       run: |
-        xvfb-run bash ./scripts/run_valgrind.sh "${{ env.ZIP_NAME }}"
+        cd ./${{ env.ZIP_NAME }}
+        xvfb-run valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=../.github/config/valgrind.supp --error-exitcode=1 ./"${EXECUTABLE_NAME}" < ../"${INPUT_FILENAME}"
