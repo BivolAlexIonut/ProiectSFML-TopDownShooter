@@ -9,12 +9,12 @@ public:
     Health(float currentHealth, float maxHealth);
     ~Health();
 
-    void takeDamage(float amount) {
+    [[maybe_unused]] void takeDamage(float amount) {
         m_currentHealth -= amount;
         m_currentHealth = std::max(0.f, m_currentHealth);
     }
 
-    [[nodiscard]] float getPercentage() const {
+    [[maybe_unused]] [[nodiscard]] float getPercentage() const {
         if (m_maxHealth <= 0.f) return 0.f;
         return m_currentHealth / m_maxHealth;
     }
