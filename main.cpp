@@ -14,11 +14,11 @@ int main() {
 
     GameMap gameMap;
     if (!gameMap.load("../assets/Levels/level1.json",
-                      "../assets//Premium Content/Tileset with cell size 256x256.png")) {
+                      "../assets/Premium Content/Tileset with cell size 256x256.png")) {
         std::cerr << "EROARE FATALA: Harta nu a putut fi incarcata." << std::endl;
         return -1;
                       }
-    const float mapScale = 0.4f;
+    constexpr float mapScale = 0.4f;
     Player player(1000.f * mapScale, 1000.f * mapScale);
 
     Enemy enemy1(100.f, 200.f);
